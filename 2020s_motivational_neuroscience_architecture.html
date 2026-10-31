@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Motivational Neuroscience</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #07090e;
+      --bg-panel: #0d111a;
+      --border-dim: #1e2638;
+      --cyan-glow: #06b6d4;
+      --amber-glow: #f59e0b;
+      --rose-glow: #f43f5e;
+      --emerald-glow: #10b981;
+      --violet-glow: #8b5cf6;
+    }
+    body {
+      background-color: var(--bg-base);
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(6, 182, 212, 0.05) 0%, transparent 35%),
+        radial-gradient(circle at 85% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 40%),
+        linear-gradient(to right, rgba(30, 38, 56, 0.18) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 38, 56, 0.18) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .sci-card {
+      background: rgba(13, 17, 26, 0.88);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-dim);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+    }
+    .sci-card:hover {
+      border-color: rgba(6, 182, 212, 0.45);
+      box-shadow: 0 12px 32px -8px rgba(6, 182, 212, 0.12);
+    }
+    .sci-card.active-highlight {
+      border-color: #06b6d4;
+      box-shadow: 0 0 24px rgba(6, 182, 212, 0.22);
+    }
+    @keyframes pulseDash {
+      to {
+        stroke-dashoffset: -48;
+      }
+    }
+    .signal-flow {
+      stroke-dasharray: 6 6;
+      animation: pulseDash 1.4s linear infinite;
+    }
+    @keyframes pulseFast {
+      to {
+        stroke-dashoffset: -48;
+      }
+    }
+    .signal-fast {
+      stroke-dasharray: 4 8;
+      animation: pulseFast 0.65s linear infinite;
+    }
+    @keyframes nodeBreath {
+      0%, 100% { filter: drop-shadow(0 0 4px rgba(6, 182, 212, 0.4)); }
+      50% { filter: drop-shadow(0 0 12px rgba(6, 182, 212, 0.9)); }
+    }
+    .glow-node {
+      animation: nodeBreath 2.8s ease-in-out infinite;
+    }
+    svg text {
+      user-select: none;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    input[type="range"] {
+      accent-color: #06b6d4;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-3 sm:p-5 flex flex-col justify-between select-none">
+
+  <!-- TOP HEADER & LIVE WORD COUNTER BADGE -->
+  <header class="max-w-[1440px] w-full mx-auto mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/90 pb-2.5">
+    <div class="flex items-center gap-3">
+      <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_10px_#06b6d4]"></div>
+      <h1 class="text-base sm:text-lg font-bold tracking-tight text-slate-100 uppercase">
+        Motivational Neuroscience
+      </h1>
+    </div>
+
+    <!-- Live JS Word Counter Badge -->
+    <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/90 border border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.12)]">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+      <span id="word-counter-badge" class="mono text-xs font-semibold text-emerald-300 tracking-wide">
+        78/100 Words
+      </span>
+    </div>
+  </header>
+
+  <!-- MAIN 12-COLUMN SCIENTIFIC DASHBOARD -->
+  <main class="max-w-[1440px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-3.5 flex-1">
+
+    <!-- =====================================================================
+         MODULE 1: EMPIRICAL FACT-CHECK (7 COLS)
+         ===================================================================== -->
+    <section id="mod-1" class="sci-card rounded-xl p-3.5 lg:col-span-7 flex flex-col justify-between">
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-cyan-400 mono">
+          1. Empirical Fact-Check
+        </h2>
+        <div class="flex gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-rose-500/80"></span>
+          <span class="w-2 h-2 rounded-full bg-cyan-400/80"></span>
+          <span class="w-2 h-2 rounded-full bg-violet-400/80"></span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 flex-1">
+        
+        <!-- CARD 1A: dACC Myth vs. Woo & Wager (2014) MVPA -->
+        <div id="card-mvpa" onclick="toggleMVPA()" class="bg-slate-950/70 border border-slate-800/90 hover:border-cyan-500/50 rounded-lg p-2.5 flex flex-col justify-between cursor-pointer transition-all group">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold text-slate-200 leading-tight">
+              dACC: Eisenberger vs. Wager (2014) MVPA
+            </span>
+          </div>
+
+          <!-- Interactive Brain & MVPA Voxel Hyperplane SVG -->
+          <svg viewBox="0 0 220 140" class="w-full h-32 my-1 overflow-visible">
+            <defs>
+              <radialGradient id="blobOverlap" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#f43f5e" stop-opacity="0.85"/>
+                <stop offset="60%" stop-color="#f59e0b" stop-opacity="0.45"/>
+                <stop offset="100%" stop-color="#f43f5e" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+
+            <!-- Sagittal Brain Outline & Cingulate Sulcus -->
+            <path d="M18,95 C12,60 35,24 85,20 C135,16 172,38 176,74 C178,96 160,112 135,114 C112,115 98,98 78,98 C55,98 45,112 28,108 Z" 
+                  fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+            <!-- Corpus Callosum & dACC region contour -->
+            <path d="M48,78 C58,54 105,50 132,68 C118,74 96,68 74,73 C60,76 54,82 48,78 Z" 
+                  fill="#1e293b" stroke="#475569" stroke-width="1"/>
+
+            <!-- Univariate Blur Mode (Eisenberger 2003 Reverse Inference) -->
+            <g id="univariate-layer" class="transition-opacity duration-300" style="opacity: 0.15;">
+              <circle cx="88" cy="52" r="24" fill="url(#blobOverlap)" />
+              <circle cx="88" cy="52" r="22" fill="none" stroke="#f59e0b" stroke-width="1" stroke-dasharray="3 2"/>
+            </g>
+
+            <!-- MVPA Micro-Voxel Weight Grid (Woo & Wager 2014) -->
+            <g id="mvpa-layer" class="transition-opacity duration-300" style="opacity: 1;">
+              <!-- Voxel Matrix inside dACC -->
+              <g id="mvpa-voxels" transform="translate(68, 34)"></g>
+              <!-- Separating Support Vector Hyperplane -->
+              <line id="mvpa-plane" x1="62" y1="68" x2="114" y2="30" stroke="#06b6d4" stroke-width="2" stroke-dasharray="3 2" />
+            </g>
+
+            <!-- Callout lines to Micro-Voxel Legend -->
+            <line x1="92" y1="44" x2="144" y2="34" stroke="#475569" stroke-width="1" stroke-dasharray="2 2"/>
+            <line x1="92" y1="58" x2="144" y2="66" stroke="#475569" stroke-width="1" stroke-dasharray="2 2"/>
+
+            <!-- Right-side MVPA Classifier Readout -->
+            <rect x="145" y="22" width="68" height="22" rx="4" fill="#090d16" stroke="#f43f5e" stroke-width="1"/>
+            <circle cx="154" cy="33" r="3.5" fill="#f43f5e"/>
+            <text x="162" y="36" fill="#fda4af" font-size="8.5" font-weight="600">Pain</text>
+
+            <rect x="145" y="54" width="68" height="22" rx="4" fill="#090d16" stroke="#06b6d4" stroke-width="1"/>
+            <circle cx="154" cy="65" r="3.5" fill="#06b6d4"/>
+            <text x="162" y="68" fill="#67e8f9" font-size="8.5" font-weight="600">Rejection</text>
+
+            <rect x="145" y="86" width="68" height="22" rx="4" fill="#090d16" stroke="#f59e0b" stroke-width="1"/>
+            <circle cx="154" cy="97" r="3.5" fill="#f59e0b"/>
+            <text x="162" y="100" fill="#fde68a" font-size="8.5" font-weight="600">Salience</text>
+          </svg>
+
+          <!-- Interactive State Indicator Bar -->
+          <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden flex">
+            <div id="mvpa-bar-1" class="bg-cyan-400 h-full w-4/5 transition-all duration-300"></div>
+            <div id="mvpa-bar-2" class="bg-rose-500 h-full w-1/5 transition-all duration-300"></div>
+          </div>
+        </div>
+
+        <!-- CARD 1B: SDT Construct Conflation -->
+        <div id="card-sdt" onclick="toggleSDT()" class="bg-slate-950/70 border border-slate-800/90 hover:border-emerald-500/50 rounded-lg p-2.5 flex flex-col justify-between cursor-pointer transition-all">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold text-slate-200 leading-tight">
+              SDT (1985): Relatedness ≠ Approval
+            </span>
+          </div>
+
+          <svg viewBox="0 0 220 140" class="w-full h-32 my-1 overflow-visible">
+            <!-- Left: Intrinsic Triad (Coherent Phase Synchrony) -->
+            <g id="sdt-intrinsic-group" transform="translate(8, 6)">
+              <polygon points="48,22 18,78 78,78" fill="rgba(16, 185, 129, 0.12)" stroke="#10b981" stroke-width="1.6" class="signal-flow"/>
+              <circle cx="48" cy="22" r="7" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+              <circle cx="18" cy="78" r="7" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+              <circle cx="78" cy="78" r="7" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+              <circle id="sdt-sync-core" cx="48" cy="60" r="4" fill="#34d399" class="glow-node"/>
+              <text x="48" y="112" text-anchor="middle" fill="#6ee7b7" font-size="9.5" font-weight="600">Intrinsic</text>
+            </g>
+
+            <!-- Center Divider (Antagonism Vector) -->
+            <line x1="110" y1="16" x2="110" y2="122" stroke="#334155" stroke-width="1" stroke-dasharray="3 3"/>
+
+            <!-- Right: Introjected Approval-Seeking (Contingent Ego Tension) -->
+            <g id="sdt-introjected-group" transform="translate(118, 6)">
+              <!-- Fractured / Pulled Vector Field -->
+              <line x1="46" y1="54" x2="16" y2="20" stroke="#f43f5e" stroke-width="1.5" stroke-dasharray="2 2"/>
+              <line x1="46" y1="54" x2="80" y2="20" stroke="#f43f5e" stroke-width="1.5" stroke-dasharray="2 2"/>
+              <line x1="46" y1="54" x2="46" y2="90" stroke="#f43f5e" stroke-width="2"/>
+              <!-- External Evaluative Pull Arrows -->
+              <polygon points="14,17 22,19 17,25" fill="#f43f5e"/>
+              <polygon points="82,17 74,19 79,25" fill="#f43f5e"/>
+              <circle id="sdt-ego-node" cx="46" cy="54" r="11" fill="rgba(244, 63, 94, 0.2)" stroke="#f43f5e" stroke-width="2"/>
+              <path d="M41,49 L51,59 M51,49 L41,59" stroke="#fda4af" stroke-width="1.8"/>
+              <text x="46" y="112" text-anchor="middle" fill="#fda4af" font-size="9.5" font-weight="600">Introjected</text>
+            </g>
+          </svg>
+
+          <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden flex">
+            <div id="sdt-bar" class="bg-emerald-400 h-full w-1/2 transition-all duration-300"></div>
+          </div>
+        </div>
+
+        <!-- CARD 1C: The "True Self" Fallacy -->
+        <div id="card-self" onclick="cycleSelfAttractor()" class="bg-slate-950/70 border border-slate-800/90 hover:border-violet-500/50 rounded-lg p-2.5 flex flex-col justify-between cursor-pointer transition-all">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold text-slate-200 leading-tight">
+              Self: Essentialist Myth vs. State Regulation
+            </span>
+          </div>
+
+          <svg viewBox="0 0 220 140" class="w-full h-32 my-1 overflow-visible">
+            <!-- Left: Static Essentialist Homunculus (Rejected) -->
+            <g transform="translate(10, 12)">
+              <polygon points="38,14 64,34 54,72 22,72 12,34" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+              <line x1="10" y1="14" x2="66" y2="74" stroke="#f43f5e" stroke-width="2.5"/>
+              <line x1="66" y1="14" x2="10" y2="74" stroke="#f43f5e" stroke-width="2.5"/>
+              <text x="38" y="106" text-anchor="middle" fill="#94a3b8" font-size="9.5" font-weight="600">Static</text>
+            </g>
+
+            <!-- Right: Context-Dependent State-Space Attractor Manifold -->
+            <g transform="translate(102, 10)">
+              <!-- Energy Landscape Contours -->
+              <ellipse cx="56" cy="48" rx="48" ry="32" fill="none" stroke="#312e81" stroke-width="1"/>
+              <ellipse cx="56" cy="48" rx="34" ry="21" fill="none" stroke="#4338ca" stroke-width="1"/>
+              <!-- Double-Well Attractor Trajectory -->
+              <path id="attractor-path" d="M22,48 C22,24 52,24 56,48 C60,72 90,72 90,48 C90,24 60,24 56,48 C52,72 22,72 22,48 Z" 
+                    fill="none" stroke="#8b5cf6" stroke-width="2" class="signal-flow"/>
+              <!-- Live Context State Particle -->
+              <circle id="state-particle" cx="34" cy="36" r="5" fill="#c4b5fd" stroke="#8b5cf6" stroke-width="2" class="glow-node"/>
+              <text x="56" y="108" text-anchor="middle" fill="#c4b5fd" font-size="9.5" font-weight="600">Adaptive</text>
+            </g>
+          </svg>
+
+          <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden flex">
+            <div id="self-bar" class="bg-violet-400 h-full w-3/4 transition-all duration-300"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         MODULE 2: STEELMANNED SOCIOMETER KERNEL (5 COLS)
+         ===================================================================== -->
+    <section id="mod-2" class="sci-card rounded-xl p-3.5 lg:col-span-5 flex flex-col justify-between">
+      <div class="flex items-center justify-between mb-1">
+        <h2 class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-amber-400 mono">
+          2. Sociometer Kernel (Baumeister, Leary)
+        </h2>
+        <!-- Mode Toggle Pills -->
+        <div class="flex items-center gap-1.5">
+          <button onclick="setSociometerMode('adaptive')" id="btn-soc-adaptive" class="px-2 py-0.5 rounded text-[10px] mono font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 transition-all">
+            Inclusion
+          </button>
+          <button onclick="setSociometerMode('sns')" id="btn-soc-sns" class="px-2 py-0.5 rounded text-[10px] mono font-semibold bg-slate-900 text-rose-300 border border-slate-700 hover:border-rose-500/50 transition-all">
+            SNS Dysregulation
+          </button>
+        </div>
+      </div>
+
+      <!-- Interactive Evolutionary Relational-Value Gauge & Waveform SVG -->
+      <div class="bg-slate-950/70 border border-slate-800/90 rounded-lg p-2.5 flex-1 flex flex-col justify-between">
+        <svg viewBox="0 0 380 155" class="w-full h-36 overflow-visible">
+          <defs>
+            <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#f43f5e" />
+              <stop offset="45%" stop-color="#f59e0b" />
+              <stop offset="100%" stop-color="#10b981" />
+            </linearGradient>
+          </defs>
+
+          <!-- Left: Evolutionary Sociometer Dial -->
+          <g transform="translate(15, 12)">
+            <!-- Gauge Arc Track -->
+            <path d="M 18 102 A 58 58 0 0 1 134 102" fill="none" stroke="#1e293b" stroke-width="12" stroke-linecap="round"/>
+            <path d="M 18 102 A 58 58 0 0 1 134 102" fill="none" stroke="url(#gaugeGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="182" stroke-dashoffset="0"/>
+            
+            <!-- Tick Marks -->
+            <line x1="18" y1="102" x2="28" y2="102" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="76" y1="44" x2="76" y2="54" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="134" y1="102" x2="124" y2="102" stroke="#cbd5e1" stroke-width="1.5"/>
+
+            <!-- Needle Group -->
+            <g id="sociometer-needle" transform="rotate(32, 76, 102)" style="transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);">
+              <line x1="76" y1="102" x2="76" y2="50" stroke="#f8fafc" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="76" cy="50" r="3" fill="#38bdf8"/>
+            </g>
+            <circle cx="76" cy="102" r="6" fill="#0f172a" stroke="#94a3b8" stroke-width="2"/>
+
+            <text x="76" y="128" text-anchor="middle" fill="#cbd5e1" font-size="10" font-weight="600">Relational Gauge</text>
+          </g>
+
+          <!-- Right: Real-Time Self-Esteem / Relational Prediction Oscilloscope -->
+          <g transform="translate(178, 16)">
+            <rect x="0" y="0" width="188" height="106" rx="6" fill="#060911" stroke="#1e293b" stroke-width="1.2"/>
+            <!-- Homeostatic Set-Point Corridor -->
+            <rect x="2" y="34" width="184" height="36" fill="rgba(16, 185, 129, 0.06)"/>
+            <line x1="2" y1="52" x2="186" y2="52" stroke="#10b981" stroke-width="0.8" stroke-dasharray="3 3"/>
+            
+            <!-- Dynamic Waveform Path -->
+            <path id="sociometer-wave" d="" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round"/>
+          </g>
+        </svg>
+
+        <!-- Interactive Perturbation Slider -->
+        <div class="flex items-center gap-3 pt-1 px-1">
+          <input id="sociometer-slider" type="range" min="0" max="100" value="78" oninput="manualSociometerInput(this.value)" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer"/>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         MODULE 3: 2020s FRONTIER PARADIGMS (7 COLS)
+         ===================================================================== -->
+    <section id="mod-3" class="sci-card rounded-xl p-3.5 lg:col-span-7 flex flex-col justify-between">
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-emerald-400 mono">
+          3. 2020s Frontier Paradigms
+        </h2>
+        <div class="h-px flex-1 bg-slate-800 mx-3"></div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 flex-1">
+        
+        <!-- 3A: Active Inference (Friston, Barrett) -->
+        <div onclick="triggerAllostasisPulse()" class="bg-slate-950/70 border border-slate-800/90 hover:border-cyan-500/50 rounded-lg p-2.5 flex flex-col justify-between cursor-pointer transition-all">
+          <span class="text-[11px] font-semibold text-cyan-300">
+            Active Inference (Friston, Barrett)
+          </span>
+
+          <svg viewBox="0 0 260 100" class="w-full h-24 my-1 overflow-visible">
+            <!-- Cortical Generative Model Node (Left) -->
+            <rect x="12" y="24" width="76" height="52" rx="8" fill="#0c192c" stroke="#06b6d4" stroke-width="1.6"/>
+            <text x="50" y="53" text-anchor="middle" fill="#67e8f9" font-size="9.5" font-weight="600">Allostasis</text>
+
+            <!-- Top Curved Loop: Prior Predictions -->
+            <path d="M 92 34 C 125 10, 145 10, 174 34" fill="none" stroke="#06b6d4" stroke-width="2" class="signal-flow"/>
+            <polygon points="176,35 168,33 172,27" fill="#06b6d4"/>
+
+            <!-- Bottom Curved Loop: Ascending Interoceptive Prediction Error -->
+            <path id="intero-error-path" d="M 174 66 C 145 90, 125 90, 92 66" fill="none" stroke="#f43f5e" stroke-width="2" class="signal-Fast"/>
+            <polygon points="90,65 98,67 94,73" fill="#f43f5e"/>
+
+            <!-- Interoceptive / Visceral Body State (Right) -->
+            <rect x="178" y="24" width="72" height="52" rx="8" fill="#1f1224" stroke="#f43f5e" stroke-width="1.6"/>
+            <text x="214" y="53" text-anchor="middle" fill="#fda4af" font-size="8.5" font-weight="600">Prediction-Error</text>
+          </svg>
+        </div>
+
+        <!-- 3B: Dopamine Circuits (Schultz, Berridge) -->
+        <div onclick="cycleDopamineTrial()" class="bg-slate-950/70 border border-slate-800/90 hover:border-amber-500/50 rounded-lg p-2.5 flex flex-col justify-between cursor-pointer transition-all">
+          <span class="text-[11px] font-semibold text-amber-300">
+            Dopamine Circuits (Schultz, Berridge)
+          </span>
+
+          <svg viewBox="0 0 260 100" class="w-full h-24 my-1 overflow-visible">
+            <!-- Axes -->
+            <line x1="16" y1="82" x2="248" y2="82" stroke="#334155" stroke-width="1.2"/>
+            <line x1="16" y1="14" x2="16" y2="82" stroke="#334155" stroke-width="1.2"/>
+
+            <!-- Wanting (Incentive Salience / Mesolimbic Dopamine Spike) -->
+            <path id="da-wanting-curve" d="M18,78 L58,78 C68,78 72,14 82,14 C92,14 96,78 112,78 L244,78" 
+                  fill="none" stroke="#f59e0b" stroke-width="2.4"/>
+
+            <!-- Liking (Hedonic Opioid Hotspot - Dissociated Low Curve) -->
+            <path id="da-liking-curve" d="M18,78 L128,78 C142,78 148,54 162,54 C176,54 182,78 198,78 L244,78" 
+                  fill="none" stroke="#06b6d4" stroke-width="1.8" stroke-dasharray="4 3"/>
+
+            <!-- Legend Labels -->
+            <text x="82" y="28" fill="#fcd34d" font-size="9.5" font-weight="600">RPE</text>
+            <text x="175" y="42" text-anchor="middle" fill="#67e8f9" font-size="9" font-weight="600">Wanting≠Liking</text>
+          </svg>
+        </div>
+
+        <!-- 3C: Dual-Strategies Theory (Henrich, Cheng) -->
+        <div onclick="cycleStatusStrategy()" class="bg-slate-950/70 border border-slate-800/90 hover:border-violet-500/50 rounded-lg p-2.5 flex flex-col justify-between cursor-pointer transition-all">
+          <span class="text-[11px] font-semibold text-violet-300">
+            Dual-Strategies (Henrich, Cheng)
+          </span>
+
+          <svg viewBox="0 0 260 100" class="w-full h-24 my-1 overflow-visible">
+            <!-- Root Node -->
+            <circle cx="24" cy="50" r="8" fill="#1e293b" stroke="#94a3b8" stroke-width="2"/>
+
+            <!-- Branch 1: Prestige (Competence / Information Sharing) -->
+            <path id="branch-prestige" d="M 32 46 C 72 20, 110 20, 156 20" fill="none" stroke="#06b6d4" stroke-width="2.2" class="signal-flow"/>
+            <rect x="158" y="8" width="90" height="22" rx="5" fill="#082f49" stroke="#06b6d4" stroke-width="1.4"/>
+            <text x="203" y="22" text-anchor="middle" fill="#67e8f9" font-size="9" font-weight="600">Prestige</text>
+
+            <!-- Branch 2: Dominance (Force / Agonistic Threat) -->
+            <path id="branch-dominance" d="M 32 50 L 156 50" fill="none" stroke="#f43f5e" stroke-width="1.8" stroke-dasharray="3 3"/>
+            <rect x="158" y="39" width="90" height="22" rx="5" fill="#3b0716" stroke="#f43f5e" stroke-width="1.4"/>
+            <text x="203" y="53" text-anchor="middle" fill="#fda4af" font-size="9" font-weight="600">Dominance</text>
+
+            <!-- Branch 3: Affiliation (Horizontal Belonging Bond) -->
+            <path id="branch-affiliation" d="M 32 54 C 72 80, 110 80, 156 80" fill="none" stroke="#10b981" stroke-width="2.2" class="signal-flow"/>
+            <rect x="158" y="69" width="90" height="22" rx="5" fill="#064e3b" stroke="#10b981" stroke-width="1.4"/>
+            <text x="203" y="83" text-anchor="middle" fill="#6ee7b7" font-size="9" font-weight="600">Affiliation</text>
+          </svg>
+        </div>
+
+        <!-- 3D: Cybernetic Goal Control (DeYoung, Kruglanski) -->
+        <div onclick="dampenCyberneticEntropy()" class="bg-slate-950/70 border border-slate-800/90 hover:border-emerald-500/50 rounded-lg p-2.5 flex flex-col justify-between cursor-pointer transition-all">
+          <span class="text-[11px] font-semibold text-emerald-300">
+            Cybernetics (DeYoung, Kruglanski)
+          </span>
+
+          <svg viewBox="0 0 260 100" class="w-full h-24 my-1 overflow-visible">
+            <!-- Left: Hierarchical Goal Pyramid -->
+            <g transform="translate(12, 12)">
+              <polygon points="46,6 84,72 8,72" fill="rgba(16, 185, 129, 0.1)" stroke="#10b981" stroke-width="1.5"/>
+              <line x1="27" y1="39" x2="65" y2="39" stroke="#10b981" stroke-width="1.2"/>
+              <line x1="18" y1="56" x2="74" y2="56" stroke="#10b981" stroke-width="1.2"/>
+              <circle cx="46" cy="24" r="3.5" fill="#34d399" class="glow-node"/>
+              <text x="46" y="86" text-anchor="middle" fill="#6ee7b7" font-size="9" font-weight="600">Hierarchy</text>
+            </g>
+
+            <!-- Arrow from Hierarchy to Entropy Damping -->
+            <line x1="104" y1="48" x2="128" y2="48" stroke="#64748b" stroke-width="1.5" stroke-dasharray="2 2"/>
+
+            <!-- Right: Cybernetic Entropy Reduction Wave -->
+            <g transform="translate(132, 12)">
+              <path id="entropy-wave" d="M 0 38 Q 10 2, 20 38 T 40 38 Q 50 18, 60 38 T 80 38 Q 90 32, 100 38 L 118 38" 
+                    fill="none" stroke="#a78bfa" stroke-width="2"/>
+              <text x="58" y="86" text-anchor="middle" fill="#c4b5fd" font-size="9" font-weight="600">Entropy</text>
+            </g>
+          </svg>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         MODULE 4: INTEGRATED ARCHITECTURE FLOWCHART (5 COLS)
+         ===================================================================== -->
+    <section id="mod-4" class="sci-card rounded-xl p-3.5 lg:col-span-5 flex flex-col justify-between">
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-violet-400 mono">
+          4. Integrated Architecture
+        </h2>
+        <span class="w-2 h-2 rounded-full bg-violet-400 animate-pulse"></span>
+      </div>
+
+      <!-- Multi-Level Computational Cascade SVG + Interactive Stack -->
+      <div class="bg-slate-950/70 border border-slate-800/90 rounded-lg p-3 flex-1 flex flex-col justify-between relative overflow-hidden">
+        
+        <!-- Background Animated Vertical Neural Conduit SVG -->
+        <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 300 280">
+          <!-- Ascending Bottom-Up Interoceptive & Dopaminergic Feedforward -->
+          <line id="conduit-up" x1="48" y1="250" x2="48" y2="30" stroke="#06b6d4" stroke-width="2" class="signal-flow" opacity="0.65"/>
+          <!-- Descending Top-Down Allostatic & Cybernetic Predictions -->
+          <line id="conduit-down" x1="252" y1="30" x2="252" y2="250" stroke="#8b5cf6" stroke-width="2" class="signal-flow" opacity="0.65"/>
+        </svg>
+
+        <!-- LEVEL 4: Phenomenological Sociometer Readout (Top) -->
+        <div onclick="activateArchLevel(4)" id="arch-l4" class="relative z-10 bg-slate-900/95 border border-rose-500/50 hover:border-rose-400 rounded-lg p-2.5 cursor-pointer transition-all flex items-center justify-between shadow-md">
+          <div class="flex items-center gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-rose-400 shadow-[0_0_8px_#f43f5e]"></span>
+            <span class="mono text-[11px] sm:text-xs font-semibold text-rose-200">
+              L4: Sociometer Readout (Recognition = Error Signal)
+            </span>
+          </div>
+          <span class="text-rose-400 text-xs font-bold">▲</span>
+        </div>
+
+        <!-- LEVEL 3: Evolutionary Channels -->
+        <div onclick="activateArchLevel(3)" id="arch-l3" class="relative z-10 bg-slate-900/95 border border-violet-500/40 hover:border-violet-400 rounded-lg p-2.5 cursor-pointer transition-all flex items-center justify-between shadow-md">
+          <div class="flex items-center gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-violet-400 shadow-[0_0_8px_#8b5cf6]"></span>
+            <span class="mono text-[11px] sm:text-xs font-semibold text-violet-200">
+              L3: Affiliation vs. Prestige/Dominance
+            </span>
+          </div>
+          <span class="text-violet-400 text-xs font-bold">◆</span>
+        </div>
+
+        <!-- LEVEL 2: Mesolimbic Dopamine & Cybernetic Control -->
+        <div onclick="activateArchLevel(2)" id="arch-l2" class="relative z-10 bg-slate-900/95 border border-amber-500/40 hover:border-amber-400 rounded-lg p-2.5 cursor-pointer transition-all flex items-center justify-between shadow-md">
+          <div class="flex items-center gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_#f59e0b]"></span>
+            <span class="mono text-[11px] sm:text-xs font-semibold text-amber-200">
+              L2: Mesolimbic Dopamine RPE
+            </span>
+          </div>
+          <span class="text-amber-400 text-xs font-bold">⚡</span>
+        </div>
+
+        <!-- LEVEL 1: Metabolic Allostasis & Active Inference (Foundation) -->
+        <div onclick="activateArchLevel(1)" id="arch-l1" class="relative z-10 bg-slate-900/95 border border-cyan-500/50 hover:border-cyan-400 rounded-lg p-2.5 cursor-pointer transition-all flex items-center justify-between shadow-md">
+          <div class="flex items-center gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#06b6d4]"></span>
+            <span class="mono text-[11px] sm:text-xs font-semibold text-cyan-200">
+              L1: Metabolic Allostasis
+            </span>
+          </div>
+          <span class="text-cyan-400 text-xs font-bold">●</span>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /* =========================================================================
+       1. LIVE WORD COUNTER AUDIT (< 100 WORDS STRICT VERIFICATION)
+       ========================================================================= */
+    function updateWordCount() {
+      // Collect all rendered text from HTML body & SVG text elements
+      const rawText = document.body.innerText || "";
+      // Split by whitespace and filter non-empty word tokens
+      const words = rawText
+        .trim()
+        .split(/\s+/)
+        .filter(token => /[a-zA-Z0-9]/.test(token));
+      
+      const badge = document.getElementById('word-counter-badge');
+      if (badge) {
+        badge.textContent = `${words.length}/100 Words`;
+      }
+    }
+
+    /* =========================================================================
+       2. MODULE 1 INTERACTIVITY: dACC MVPA, SDT, & STATE ATTRACTOR
+       ========================================================================= */
+    let mvpaDistinctMode = true;
+
+    function renderMVPAVoxels() {
+      const group = document.getElementById('mvpa-voxels');
+      if (!group) return;
+      group.innerHTML = '';
+      // 5x4 micro-voxel pattern inside dACC showing orthogonal neural populations
+      const pattern = [
+        [1, 1, 0, 1, 2],
+        [1, 0, 1, 2, 2],
+        [0, 1, 2, 2, 0],
+        [1, 2, 2, 0, 2]
+      ];
+      for (let r = 0; r < 4; r++) {
+        for (let c = 0; c < 5; c++) {
+          const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          rect.setAttribute('x', c * 8);
+          rect.setAttribute('y', r * 8);
+          rect.setAttribute('width', '6.5');
+          rect.setAttribute('height', '6.5');
+          rect.setAttribute('rx', '1.2');
+          const val = pattern[r][c];
+          if (mvpaDistinctMode) {
+            rect.setAttribute('fill', val === 1 ? '#f43f5e' : val === 2 ? '#06b6d4' : '#f59e0b');
+            rect.setAttribute('opacity', '0.9');
+          } else {
+            rect.setAttribute('fill', '#f59e0b');
+            rect.setAttribute('opacity', '0.45');
+          }
+          group.appendChild(rect);
+        }
+      }
+    }
+
+    function toggleMVPA() {
+      mvpaDistinctMode = !mvpaDistinctMode;
+      const uniLayer = document.getElementById('univariate-layer');
+      const mvpaPlane = document.getElementById('mvpa-plane');
+      const bar1 = document.getElementById('mvpa-bar-1');
+      const bar2 = document.getElementById('mvpa-bar-2');
+
+      if (mvpaDistinctMode) {
+        uniLayer.style.opacity = '0.15';
+        mvpaPlane.style.opacity = '1';
+        bar1.style.width = '80%';
+        bar2.style.width = '20%';
+      } else {
+        uniLayer.style.opacity = '0.95';
+        mvpaPlane.style.opacity = '0.15';
+        bar1.style.width = '25%';
+        bar2.style.width = '75%';
+      }
+      renderMVPAVoxels();
+    }
+
+    let sdtIntrinsicActive = true;
+    function toggleSDT() {
+      sdtIntrinsicActive = !sdtIntrinsicActive;
+      const intGroup = document.getElementById('sdt-intrinsic-group');
+      const extGroup = document.getElementById('sdt-introjected-group');
+      const bar = document.getElementById('sdt-bar');
+
+      if (sdtIntrinsicActive) {
+        intGroup.style.opacity = '1';
+        extGroup.style.opacity = '0.45';
+        bar.style.width = '82%';
+        bar.className = 'bg-emerald-400 h-full transition-all duration-300';
+      } else {
+        intGroup.style.opacity = '0.4';
+        extGroup.style.opacity = '1';
+        bar.style.width = '30%';
+        bar.className = 'bg-rose-500 h-full transition-all duration-300';
+      }
+    }
+
+    let attractorPhase = 0;
+    function cycleSelfAttractor() {
+      attractorPhase = (attractorPhase + 1) % 3;
+      const path = document.getElementById('attractor-path');
+      const bar = document.getElementById('self-bar');
+      const colors = ['#8b5cf6', '#06b6d4', '#10b981'];
+      const widths = ['75%', '92%', '55%'];
+      path.setAttribute('stroke', colors[attractorPhase]);
+      bar.style.width = widths[attractorPhase];
+    }
+
+    /* =========================================================================
+       3. MODULE 2 INTERACTIVITY: EVOLUTIONARY SOCIOMETER & OSCILLOSCOPE
+       ========================================================================= */
+    let sociometerMode = 'adaptive'; // 'adaptive' | 'sns'
+    let sociometerValue = 78;
+    let waveTick = 0;
+
+    function setSociometerMode(mode) {
+      sociometerMode = mode;
+      const btnAd = document.getElementById('btn-soc-adaptive');
+      const btnSns = document.getElementById('btn-soc-sns');
+      const slider = document.getElementById('sociometer-slider');
+
+      if (mode === 'adaptive') {
+        sociometerValue = 78;
+        slider.value = 78;
+        btnAd.className = 'px-2 py-0.5 rounded text-[10px] mono font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 transition-all';
+        btnSns.className = 'px-2 py-0.5 rounded text-[10px] mono font-semibold bg-slate-900 text-rose-300 border border-slate-700 transition-all';
+      } else {
+        sociometerValue = 28;
+        slider.value = 28;
+        btnSns.className = 'px-2 py-0.5 rounded text-[10px] mono font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/50 transition-all';
+        btnAd.className = 'px-2 py-0.5 rounded text-[10px] mono font-semibold bg-slate-900 text-emerald-300 border border-slate-700 transition-all';
+      }
+      updateSociometerNeedle(sociometerValue);
+    }
+
+    function manualSociometerInput(val) {
+      sociometerValue = Number(val);
+      sociometerMode = sociometerValue < 45 ? 'sns' : 'adaptive';
+      updateSociometerNeedle(sociometerValue);
+    }
+
+    function updateSociometerNeedle(val) {
+      // Map 0..100 to -75deg..+75deg
+      const angle = ((val - 50) / 50) * 72;
+      const needle = document.getElementById('sociometer-needle');
+      if (needle) {
+        needle.setAttribute('transform', `rotate(${angle}, 76, 102)`);
+      }
+    }
+
+    function animateLoops() {
+      waveTick += 0.08;
+
+      // 1. Sociometer Waveform
+      const waveEl = document.getElementById('sociometer-wave');
+      if (waveEl) {
+        let d = 'M 4 52 ';
+        for (let x = 4; x <= 184; x += 6) {
+          let y = 52;
+          if (sociometerMode === 'adaptive') {
+            // Smooth allostatic relational regulation
+            y = 52 + Math.sin(x * 0.08 + waveTick) * 11 + Math.cos(x * 0.04 - waveTick) * 4;
+            waveEl.setAttribute('stroke', '#10b981');
+          } else {
+            // Hyper-volatile SNS contingent self-worth spikes & crashes
+            const spike = Math.sin(x * 0.28 + waveTick * 2.4) * 28 + Math.cos(x * 0.65 - waveTick * 3.1) * 14;
+            y = Math.max(8, Math.min(98, 56 + spike));
+            waveEl.setAttribute('stroke', '#f43f5e');
+          }
+          d += `L ${x} ${y.toFixed(1)} `;
+        }
+        waveEl.setAttribute('d', d);
+      }
+
+      // 2. State-Space Attractor Particle Orbit (Card 1C)
+      const particle = document.getElementById('state-particle');
+      if (particle) {
+        const px = 56 + Math.cos(waveTick * 0.9) * 28;
+        const py = 48 + Math.sin(waveTick * 1.8) * 16;
+        particle.setAttribute('cx', px.toFixed(1));
+        particle.setAttribute('cy', py.toFixed(1));
+      }
+
+      requestAnimationFrame(animateLoops);
+    }
+
+    /* =========================================================================
+       4. MODULE 3 INTERACTIVITY: 2020s PARADIGM MINI-SIMULATIONS
+       ========================================================================= */
+    function triggerAllostasisPulse() {
+      const path = document.getElementById('intero-error-path');
+      if (!path) return;
+      path.setAttribute('stroke', '#10b981');
+      setTimeout(() => path.setAttribute('stroke', '#f43f5e'), 700);
+    }
+
+    let daMode = 0;
+    function cycleDopamineTrial() {
+      daMode = (daMode + 1) % 3;
+      const wanting = document.getElementById('da-wanting-curve');
+      const liking = document.getElementById('da-liking-curve');
+      if (daMode === 0) {
+        // High Incentive Salience ("Wanting") vs Low Hedonic "Liking"
+        wanting.setAttribute('d', 'M18,78 L58,78 C68,78 72,14 82,14 C92,14 96,78 112,78 L244,78');
+        liking.setAttribute('d', 'M18,78 L128,78 C142,78 148,54 162,54 C176,54 182,78 198,78 L244,78');
+      } else if (daMode === 1) {
+        // Reward Omission Dip (Negative RPE)
+        wanting.setAttribute('d', 'M18,64 L58,64 C68,64 72,22 82,22 C92,22 96,64 112,64 L145,64 C152,64 156,92 164,92 C172,92 176,64 188,64 L244,64');
+      } else {
+        // Sensitized Hyper-Wanting vs Blunted Liking
+        wanting.setAttribute('d', 'M18,78 L52,78 C64,78 70,4 82,4 C94,4 100,78 116,78 L244,78');
+        liking.setAttribute('d', 'M18,78 L128,78 C142,78 148,70 162,70 C176,70 182,78 198,78 L244,78');
+      }
+    }
+
+    let statusIdx = 0;
+    function cycleStatusStrategy() {
+      statusIdx = (statusIdx + 1) % 3;
+      const p = document.getElementById('branch-prestige');
+      const d = document.getElementById('branch-dominance');
+      const a = document.getElementById('branch-affiliation');
+      p.setAttribute('stroke-width', statusIdx === 0 ? '3.2' : '1.4');
+      d.setAttribute('stroke-width', statusIdx === 1 ? '3.2' : '1.4');
+      a.setAttribute('stroke-width', statusIdx === 2 ? '3.2' : '1.4');
+    }
+
+    let entropyDamped = false;
+    function dampenCyberneticEntropy() {
+      entropyDamped = !entropyDamped;
+      const wave = document.getElementById('entropy-wave');
+      if (entropyDamped) {
+        wave.setAttribute('d', 'M 0 38 Q 10 30, 20 38 T 40 38 Q 50 35, 60 38 T 80 38 L 118 38');
+        wave.setAttribute('stroke', '#10b981');
+      } else {
+        wave.setAttribute('d', 'M 0 38 Q 10 2, 20 38 T 40 38 Q 50 18, 60 38 T 80 38 Q 90 32, 100 38 L 118 38');
+        wave.setAttribute('stroke', '#a78bfa');
+      }
+    }
+
+    /* =========================================================================
+       5. MODULE 4 INTERACTIVITY: INTEGRATED MULTI-LEVEL ARCHITECTURE
+       ========================================================================= */
+    function activateArchLevel(level) {
+      // Highlight corresponding level & synchronize dashboard modules
+      const mod1 = document.getElementById('mod-1');
+      const mod2 = document.getElementById('mod-2');
+      const mod3 = document.getElementById('mod-3');
+
+      [mod1, mod2, mod3].forEach(m => m.classList.remove('active-highlight'));
+
+      if (level === 1 || level === 2) {
+        mod3.classList.add('active-highlight');
+        if (level === 1) triggerAllostasisPulse();
+        if (level === 2) cycleDopamineTrial();
+      } else if (level === 3) {
+        mod3.classList.add('active-highlight');
+        cycleStatusStrategy();
+      } else if (level === 4) {
+        mod1.classList.add('active-highlight');
+        mod2.classList.add('active-highlight');
+        setSociometerMode(sociometerMode === 'adaptive' ? 'sns' : 'adaptive');
+      }
+    }
+
+    window.onload = function () {
+      renderMVPAVoxels();
+      updateSociometerNeedle(sociometerValue);
+      updateWordCount();
+      animateLoops();
+    };
+  </script>
+</body>
+</html>
